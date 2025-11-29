@@ -1,0 +1,5 @@
+## 1.  Install logger Middleware  npm i redux-logger
+## 2.  import {createStore, applyMiddleware} from 'redux'
+## 3.  import logger from 'redux-logger'
+## 4.  const store = createStore(rootReducer , applyMiddleware(logger))
+## 5.  Now we cna see the log in console.log() 

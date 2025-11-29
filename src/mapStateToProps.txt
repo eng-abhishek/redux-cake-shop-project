@@ -1,0 +1,177 @@
+✅ What is mapStateToProps?
+
+mapStateToProps is a function used in React-Redux to take data from the Redux store and pass it to a React component as props.
+
+React components cannot directly read the Redux store, so mapStateToProps acts as a bridge.
+
+🧠 How does mapStateToProps work?
+const mapStateToProps = (state) => {
+    return {
+        propName: state.someValue
+    }
+}
+
+
+state → full Redux store state
+
+return an object → this becomes props for the React component
+
+So it connects the component with the Redux store and supplies the component with the data it needs.
+
+🏗 Example (Cake Shop Example)
+Redux State
+const initialState = {
+  numOfCakes: 20
+}
+
+mapStateToProps
+const mapStateToProps = (state) => {
+  return {
+    numOfCakes: state.numOfCakes
+  }
+}
+
+Component
+import React from 'react'
+import { connect } from 'react-redux'
+
+function CakeContainer(props) {
+  return (
+    <div>
+      <h2>Cakes: {props.numOfCakes}</h2>
+    </div>
+  )
+}
+
+export default connect(mapStateToProps)(CakeContainer)
+
+
+Now:
+
+props.numOfCakes comes from the Redux store
+
+Component automatically updates when store changes
+
+🎯 Summary
+What it does	Explanation
+Purpose	Sends Redux store state to a component
+Input	Full Redux state
+Output	An object that becomes component props
+Used with	connect() from react-redux
+Why needed	Components cannot read Redux store directly
+✨ When to use mapStateToProps?
+
+Use it when your React component needs:
+
+counter values
+
+user data
+
+product list
+
+theme mode
+
+API data stored in Redux
+
+any part of the Redux store
+
+
+
+##=========================##
+
+✅ What your code is doing
+
+You are creating a component ItemContainer that will show either:
+
+Cake count, or
+
+Ice-cream count
+
+based on a prop called cake.
+
+🧠 Understanding mapStateToProps with ownProps
+
+Your mapStateToProps receives two arguments:
+
+(state, ownProps)
+
+
+state → full Redux store
+
+ownProps → props passed from parent component
+
+So you are checking:
+
+ownProps.cake ? 
+    state.cake.numberOfCakes 
+    : 
+    state.iceCream.numOfIceCreams
+
+
+Meaning:
+
+If parent passes cake={true}, show cake count
+
+Else, show ice-cream count
+
+🎯 Example of parent component
+
+Your ItemContainer will be used like this:
+
+<ItemContainer cake />
+
+
+or:
+
+<ItemContainer />
+
+Case 1: <ItemContainer cake />
+
+ownProps.cake = true
+So this will run:
+
+ItemState = state.cake.numberOfCakes
+
+Case 2: <ItemContainer />
+
+ownProps.cake = undefined → false
+So this runs:
+
+ItemState = state.iceCream.numOfIceCreams
+
+📌 What your mapStateToProps returns
+return {
+    item: ItemState
+}
+
+
+So inside your component:
+
+props.item
+
+
+will show cake count or ice cream count.
+
+🖼 Your component explanation
+function ItemContainer(props){
+    return(
+        <div>
+            <h2>Item- {props.item}</h2>
+        </div>
+    )
+}
+
+
+It simply displays whichever value mapStateToProps sends.
+
+✔ Final flow (Super Simple)
+
+Parent sends a prop (cake or nothing)
+
+mapStateToProps checks that prop (ownProps.cake)
+
+It picks the correct state from Redux (cake or ice-cream)
+
+It sends it to the component as props.item
+
+Component shows “Item — X”

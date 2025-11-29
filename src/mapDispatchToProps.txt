@@ -1,0 +1,252 @@
+✅ What is mapDispatchToProps?
+
+mapDispatchToProps is a function that lets your React component send actions to the Redux store.
+
+👉 It basically provides functions in your component that can dispatch Redux actions.
+
+🧠 Syntax
+const mapDispatchToProps = (dispatch) => {
+  return {
+    someFunction: () => dispatch(someAction())
+  };
+};
+
+
+Then connect:
+
+export default connect(mapStateToProps, mapDispatchToProps)(MyComponent);
+
+🧩 Example (Cake Example)
+
+Suppose you have an action:
+
+// cakeActions.js
+export const buyCake = () => {
+  return {
+    type: 'BUY_CAKE'
+  }
+}
+
+
+Component:
+
+import React from "react";
+import { connect } from "react-redux";
+import { buyCake } from "../redux/cake/cakeActions";
+
+function CakeContainer(props) {
+  return (
+    <div>
+      <h2>Number of cakes: {props.numOfCakes}</h2>
+      <button onClick={props.buyCake}>Buy Cake</button>
+    </div>
+  );
+}
+
+👉 Using mapDispatchToProps
+const mapStateToProps = (state) => {
+  return {
+    numOfCakes: state.cake.numberOfCakes
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    buyCake: () => dispatch(buyCake())
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(CakeContainer);
+
+📌 What happens?
+Without Redux
+
+You just call a function.
+
+With mapDispatchToProps
+
+The function you call (props.buyCake()) will dispatch the action → reducer → update store → component re-renders.
+
+🧾 Shortcut Version
+
+React-Redux allows shorthand if your action creators return objects.
+
+Instead of:
+
+const mapDispatchToProps = dispatch => {
+  return {
+    buyCake: () => dispatch(buyCake())
+  }
+}
+
+
+You can do:
+
+export default connect(
+  mapStateToProps,
+  { buyCake }
+)(CakeContainer);
+
+
+React-Redux automatically wraps buyCake in dispatch.
+
+💡 When do we use mapDispatchToProps?
+
+✔ When you want to call Redux actions from your component
+✔ When you use the connect() API (not hooks)
+✔ When your component needs to update the Redux state
+
+
+### =================== ###
+### =================== ###
+
+# Question:: if i am using redux-hooks then how can be short above example ???
+
+✅ Short version using Redux Hooks (useSelector + useDispatch)
+
+Here is the same example using hooks:
+
+✔ Component (very short)
+import React from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { buyCake } from "../redux/cake/cakeActions";
+
+function CakeContainer() {
+  const numOfCakes = useSelector((state) => state.cake.numberOfCakes);
+  const dispatch = useDispatch();
+
+  return (
+    <div>
+      <h2>Number of cakes: {numOfCakes}</h2>
+      <button onClick={() => dispatch(buyCake())}>Buy Cake</button>
+    </div>
+  );
+}
+
+export default CakeContainer;
+
+🚀 What happened?
+With connect
+
+mapStateToProps
+
+mapDispatchToProps
+
+connect()
+
+With hooks
+
+useSelector replaces mapStateToProps
+
+useDispatch replaces mapDispatchToProps
+
+No connect() needed
+
+Code becomes very short and easy
+
+📌 Comparison
+🔴 Old (connect + mapStateToProps + mapDispatchToProps)
+const mapStateToProps = state => ({
+  numOfCakes: state.cake.numberOfCakes
+});
+
+const mapDispatchToProps = dispatch => ({
+  buyCake: () => dispatch(buyCake())
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(CakeContainer);
+
+🟢 New (hooks)
+const numOfCakes = useSelector(state => state.cake.numberOfCakes);
+const dispatch = useDispatch();
+
+🏆 Final Summary
+Without Hooks	With Hooks
+Uses connect()	No connect
+Uses mapStateToProps	useSelector
+Uses mapDispatchToProps	useDispatch
+More code	Much shorter
+
+If you want, I can convert your own component from connect() style to hooks.
+
+You said:
+then why we learn mapDispatchToProps
+ChatGPT said:
+
+Great question!
+Many beginners get confused about why we learn mapDispatchToProps if hooks (useDispatch, useSelector) make things easier.
+
+Here is the clear and simple answer 👇
+
+✅ Why do we learn mapDispatchToProps even if hooks exist?
+
+There are 4 important reasons:
+
+1️⃣ Because many old/enterprise React-Redux projects still use it
+
+Before 2019, React-Redux did not have hooks.
+
+So 80% of existing codebases in companies still use:
+
+connect()
+
+mapStateToProps
+
+mapDispatchToProps
+
+👉 If you work on real-world projects, you will definitely see these.
+
+2️⃣ You need it to understand how React-Redux works internally
+
+Hooks are simpler, but they hide some concepts.
+
+Understanding mapDispatchToProps helps you understand:
+
+how actions go from component → dispatch → reducer
+
+how connect() wraps your component
+
+how props come from Redux store
+
+It builds strong fundamentals.
+
+3️⃣ Some situations still prefer connect()
+
+Even today, connect() + mapStateToProps can be faster than hooks in some large apps because:
+
+connect uses memoization
+
+reduces unnecessary re-renders
+
+good for performance optimization
+
+So advanced developers still use it sometimes.
+
+4️⃣ Interview Questions
+
+Almost every React-Redux interview asks:
+
+What is mapStateToProps?
+
+What is mapDispatchToProps?
+
+connect vs hooks?
+
+Why use useDispatch instead of mapDispatchToProps?
+
+So you must know both.
+
+📌 Simple Summary
+Hooks = Modern, Short, Easy
+
+Use in new projects.
+
+mapDispatchToProps = Old but still important
+
+Used in older projects + interviews + fundamentals + performance cases.
+
+🧭 Final Understanding
+
+✔ You will use hooks in new projects
+✔ You will see mapDispatchToProps in old/real-world code
+✔ So learning both makes you a complete React-Redux developer
